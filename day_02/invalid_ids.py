@@ -26,6 +26,34 @@ def check_current_id(current_id, min_range, end_range, invalid_ids=[]):
     
     return ids_iteration(first_part, min_range, end_range, invalid_ids=invalid_ids)      
 
+def second_part(checking_id, invalid_ids=[]):
+    divide_iterator = 2
+    
+    can_be_invalid = True
+    while(can_be_invalid):
+        if len(checking_id)%divide_iterator == 0:
+            i_0 = 0
+            i_1 = int(len(checking_id)/divide_iterator)
+            part_0 = checking_id[i_0:i_1]
+            for i in range(1, divide_iterator):
+                i_0 = int(i*len(checking_id)/divide_iterator)
+                i_1 = int((i+1)*len(checking_id)/divide_iterator)
+                part_i = checking_id[i_0:i_1]
+                
+                if part_0 != part_i:
+                    can_be_invalid = False
+                    break
+            if can_be_invalid:
+                # print(f'{checking_id} IS INVALID', end=' , ')
+                invalid_ids.append(checking_id)
+                break
+            else:
+                can_be_invalid = True
+        divide_iterator += 1
+        if divide_iterator > len(checking_id):
+            break
+    return invalid_ids
+
 if __name__ == "__main__":
     with open("input.txt") as input_txt:
         ids_ranges = input_txt.readlines()[0].split(',')
@@ -38,7 +66,10 @@ if __name__ == "__main__":
             print(f'RANGE: [{id_start},{id_end}]')
             
             invalid_ids = []
-            invalid_ids = check_current_id(id_start, int(id_start), int(id_end), invalid_ids=invalid_ids)
+            # invalid_ids = check_current_id(id_start, int(id_start), int(id_end), invalid_ids=invalid_ids)
+            for current_id in range(int(id_start), int(id_end)+1):
+                invalid_ids = second_part(str(current_id), invalid_ids=invalid_ids)
+            # invalid_ids = second_part(id_start, invalid_ids=invalid_ids)
             print(f'INVALID IDS: {invalid_ids}')
 
             for invalid_id in invalid_ids:
