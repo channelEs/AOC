@@ -28,10 +28,11 @@ def part_2(N: int = 2, i_joltage_banks: list = []):
         bank_result = ['0' for _ in range(N)]
         for i, joltage_value in enumerate(battery.strip()):
             i_position = 0
+            if len(battery.strip()) - i < N:
+                i_position = N - (len(battery.strip()) - i)
             setted = False
             while not setted and i_position < N:
-                # print(f'i = {i_position} | joltage = {joltage_value} bank_result: {bank_result}')
-                print
+                print(f'i = {i_position} | joltage = {joltage_value} bank_result: {bank_result}')
                 if int(joltage_value) > int(bank_result[i_position]) and len(battery.strip()) - i >= N - i_position:
                     bank_result[i_position] = joltage_value
                     bank_result[i_position+1:] = ['0' for _ in range(N - (i_position+1))]
@@ -48,7 +49,7 @@ def part_2(N: int = 2, i_joltage_banks: list = []):
 
 
 if __name__ == "__main__":
-    with open("input_joltage.txt") as i_joltage_txt:
+    with open("input_joltage_t.txt") as i_joltage_txt:
         # total_jolts = part_1(i_joltage_banks=i_joltage_txt)
         total_jolts = part_2(N=12, i_joltage_banks=i_joltage_txt)
         print()
