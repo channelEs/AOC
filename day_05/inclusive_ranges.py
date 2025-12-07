@@ -3,47 +3,46 @@ def integrate_new_range(ranges: list, min_value, max_value):
     min_in_range = False
     i_range_max = -1
     max_in_range = False
+
     for i, range_i in enumerate(ranges):
-        if min_value < range_i[0]:
-            i_range_min = i
-            break
-        if min_value >= range_i[0] and min_value <= range_i[1]:
-            i_range_min = i
-            min_in_range = True
+        if i_range_min == -1:
+            if min_value < range_i[0]:
+                i_range_min = i
+            if min_value >= range_i[0] and min_value <= range_i[1]:
+                i_range_min = i
+                min_in_range = True
+
+        if i_range_max == -1:
+            if max_value < range_i[0]:
+                i_range_max = i
+            if max_value >= range_i[0] and max_value <= range_i[1]:
+                i_range_max = i
+                max_in_range = True
+            
+        if i_range_min != -1 and i_range_max != -1:
             break
         
-    for i, range_i in enumerate(ranges):
-        if max_value < range_i[0]:
-            i_range_max = i
-            break
-        if max_value >= range_i[0] and max_value <= range_i[1]:
-            i_range_max = i
-            max_in_range = True
-            break
-
-    new_min = min_value
-    new_max = max_value
-
     print(f'CURRENT RANGES: {ranges} | ({min_value}, {max_value}) -- [{i_range_min}, {i_range_max}]')
     if i_range_min == i_range_max and not min_in_range and not max_in_range:
         if i_range_min == -1:
-            ranges.append([new_min, new_max])
+            ranges.append([min_value, max_value])
             return
-        ranges.insert(i_range_min, [new_min, new_max])
-        
+        ranges.insert(i_range_min, [min_value, max_value])
     
     if i_range_max == -1:
         i_range_max = len(ranges)-1
 
-    if min_in_range:
-        ranges[i_range_min][0] = ranges[i_range_min][0]
-    else:
-        ranges[i_range_min][0] = new_min
+    if not min_in_range:
+        ranges[i_range_min][0] = min_value
+        # ranges[i_range_min+1][0] = ranges[i_range_min][0]
     
     if max_in_range:
         ranges[i_range_min][1] = ranges[i_range_max][1]
     else:
-        ranges[i_range_min][1] = new_max
+        ranges[i_range_min][1] = max_value
+
+    if not max_in_range:
+        i_range_max -= 1
 
     for pop_i in range(i_range_min+1, i_range_min+1 + (i_range_max-i_range_min)):
         print(f'POPING i: {pop_i}')
@@ -54,6 +53,7 @@ def construct_ranges(ranges_txt):
     for range_txt in ranges_txt:
         min = range_txt.split('-')[0]
         max = range_txt.split('-')[1]
+        # final_ranges.append([int(min), int(max)])
         integrate_new_range(ranges=final_ranges, min_value=int(min), max_value=int(max))
     print(f'FINAL RANGES: {final_ranges}')
     return final_ranges
@@ -93,6 +93,7 @@ if __name__ == "__main__":
         ranges = construct_ranges(ranges_txt=ranges_txt)
         for range_i in ranges:
             print(range_i)
+
         # total_id_count = 0
         # for id in ids:
         #     if id_in_ranges(ranges=ranges, value=id):
