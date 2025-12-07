@@ -26,8 +26,11 @@ def integrate_new_range(ranges: list, min_value, max_value):
 
     print(f'CURRENT RANGES: {ranges} | ({min_value}, {max_value}) -- [{i_range_min}, {i_range_max}]')
     if i_range_min == i_range_max and not min_in_range and not max_in_range:
+        if i_range_min == -1:
+            ranges.append([new_min, new_max])
+            return
         ranges.insert(i_range_min, [new_min, new_max])
-        return
+        
     
     if i_range_max == -1:
         i_range_max = len(ranges)-1
@@ -67,6 +70,7 @@ def count_part_two(ranges):
     total_count = 0
     for range_i in ranges:
         total_count += range_i[1] - range_i[0] + 1
+            
     return total_count
 
 if __name__ == "__main__":
@@ -87,6 +91,8 @@ if __name__ == "__main__":
         # print(f'IDS: {ids}')
 
         ranges = construct_ranges(ranges_txt=ranges_txt)
+        for range_i in ranges:
+            print(range_i)
         # total_id_count = 0
         # for id in ids:
         #     if id_in_ranges(ranges=ranges, value=id):
